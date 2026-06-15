@@ -11,10 +11,6 @@ const faqs = [
     a: "Yes. Our scope covers sourcing, quality inspection, land and marine logistics, and on-site installation support — with full documentation handover at completion.",
   },
   {
-    q: "Are your safety and quality standards independently verified?",
-    a: "Our procurement processes are ISO-aligned and we maintain NUPRC registration. Every consignment is accompanied by full chain-of-custody documentation.",
-  },
-  {
     q: "How do you manage offshore logistics and customs clearance?",
     a: "We coordinate marine freight, customs clearance, and last-mile delivery in-house through established partnerships with licensed logistics operators across Nigerian ports.",
   },

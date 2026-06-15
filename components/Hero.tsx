@@ -84,10 +84,10 @@ export default function Hero() {
       {/* Stats bar */}
       <div className="relative max-w-5xl mx-auto px-6 lg:px-8 mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
         {[
-          { value: "15+", label: "Years of Operation" },
-          { value: "200+", label: "Projects Delivered" },
+          { value: "7", label: "Years of Operation" },
+          { value: "150+", label: "Projects Delivered" },
           { value: "98%", label: "Client Retention" },
-          { value: "40+", label: "Offshore Sites Serviced" },
+          { value: "28", label: "Offshore Sites Serviced" },
         ].map((s) => (
           <div key={s.label}>
             <div className="font-display font-bold text-3xl text-ink mb-1">

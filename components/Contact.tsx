@@ -124,13 +124,20 @@ export default function Contact() {
 
             {/* Social links */}
             <div className="flex flex-wrap items-center justify-center gap-4 mt-12 pt-8 border-t border-white/10">
-              {["LinkedIn", "Instagram", "Facebook", "Twitter X"].map((s) => (
+              {[
+                { name: "LinkedIn", href: "#" },
+                { name: "Instagram", href: "https://www.instagram.com/bogatystem" },
+                { name: "Facebook", href: "#" },
+                { name: "Twitter X", href: "#" },
+              ].map((s) => (
                 <a
-                  key={s}
-                  href="#"
+                  key={s.name}
+                  href={s.href}
+                  target={s.href !== "#" ? "_blank" : undefined}
+                  rel={s.href !== "#" ? "noopener noreferrer" : undefined}
                   className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors text-white/80 text-sm px-4 py-2 rounded-full"
                 >
-                  {s}
+                  {s.name}
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                     <path d="M2 8L8 2M8 2H3M8 2v5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>

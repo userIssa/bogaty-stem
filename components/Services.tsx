@@ -4,8 +4,8 @@ function ChatIllustration() {
       <div className="flex items-center gap-2">
         <div className="icon-tile w-9 h-9 shrink-0">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-            <circle cx="12" cy="12" r="4" fill="white"/>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="12" cy="12" r="4" fill="white" />
           </svg>
         </div>
         <div className="bg-white border border-line rounded-2xl rounded-bl-sm px-3 py-2">
@@ -24,8 +24,8 @@ function ChatIllustration() {
       <div className="flex items-center gap-2">
         <div className="icon-tile w-9 h-9 shrink-0">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-            <circle cx="12" cy="12" r="4" fill="white"/>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="12" cy="12" r="4" fill="white" />
           </svg>
         </div>
         <div className="bg-white border border-line rounded-2xl rounded-bl-sm px-3 py-2 text-xs text-ink">
@@ -107,7 +107,7 @@ export default function Services() {
         <div className="text-center mb-14">
           <div className="section-badge mb-6">
             <span className="dot" />
-            003 · Capabilities
+            · Capabilities
           </div>
           <h2 className="font-display font-bold text-4xl lg:text-6xl text-ink leading-tight mb-4">
             Our STEM-Driven Services
@@ -169,7 +169,7 @@ export default function Services() {
             <div className="relative z-10">
               <div className="icon-tile w-12 h-12 mb-6">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" fill="white"/>
+                  <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" fill="white" />
                 </svg>
               </div>
               <h3 className="font-display font-semibold text-2xl text-ink mb-3">
@@ -187,7 +187,7 @@ export default function Services() {
             >
               Schedule a Call
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
           </div>

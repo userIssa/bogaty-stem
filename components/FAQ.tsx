@@ -33,7 +33,7 @@ export default function FAQ() {
         <div className="text-center mb-14">
           <div className="section-badge mb-6 mx-auto">
             <span className="dot" />
-            007 · FAQs
+            · FAQs
           </div>
           <h2 className="font-display font-bold text-4xl lg:text-6xl text-ink leading-tight">
             Common Questions
@@ -57,7 +57,7 @@ export default function FAQ() {
                 </div>
                 <span className="faq-plus">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M7 1v12M1 7h12" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M7 1v12M1 7h12" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
                 </span>
               </button>
@@ -76,7 +76,7 @@ export default function FAQ() {
             Contact Us
             <span className="w-6 h-6 rounded-full bg-mist border border-line flex items-center justify-center">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
           </a>

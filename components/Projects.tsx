@@ -18,7 +18,7 @@ export default function Projects() {
         <div className="text-center mb-14">
           <div className="section-badge mb-6">
             <span className="dot" />
-            · Case Studies
+            Case Studies
           </div>
           <h2 className="font-display font-bold text-4xl lg:text-6xl text-ink leading-tight mb-4">
             What We&apos;ve Delivered

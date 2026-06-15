@@ -29,7 +29,7 @@ export default function FAQ() {
         <div className="text-center mb-14">
           <div className="section-badge mb-6 mx-auto">
             <span className="dot" />
-            · FAQs
+            FAQs
           </div>
           <h2 className="font-display font-bold text-4xl lg:text-6xl text-ink leading-tight">
             Common Questions

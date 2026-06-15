@@ -61,7 +61,7 @@ export default function Process() {
         <div className="text-center mb-20">
           <div className="section-badge mb-6">
             <span className="dot" />
-            · Process
+            Process
           </div>
           <h2 className="font-display font-bold text-4xl lg:text-6xl text-ink leading-tight mb-4">
             How We Work

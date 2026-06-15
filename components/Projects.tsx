@@ -8,27 +8,7 @@ const projects = [
       { value: "100%", label: "On-Spec Arrival" },
       { value: "0", label: "Safety Incidents" },
     ],
-  },
-  {
-    category: "Pipeline Coating & Painting",
-    title: "Trans-Regional Pipeline Coating Initiative",
-    desc: "Executed abrasive blasting and protective coating across a multi-kilometre pipeline corridor, extending asset lifespan and meeting international corrosion-resistance standards.",
-    metrics: [
-      { value: "Multi-km", label: "Corridor Coated" },
-      { value: "ISO", label: "Standard Met" },
-      { value: "+15yr", label: "Lifespan Added" },
-    ],
-  },
-  {
-    category: "General Procurement",
-    title: "Industrial Catering Equipment Rollout",
-    desc: "Sourced and delivered gas process equipment, pumps, and electricals for a network of industrial catering sites supporting offshore oil company personnel.",
-    metrics: [
-      { value: "Network", label: "Wide Rollout" },
-      { value: "Full", label: "Chain of Custody" },
-      { value: "On-Time", label: "Delivery" },
-    ],
-  },
+  }
 ];
 
 export default function Projects() {

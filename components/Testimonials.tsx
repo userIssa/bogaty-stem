@@ -13,7 +13,7 @@ const testimonials = [
   },
   {
     quote:
-      "What stood out was the logistics coordination — heavy equipment moved through difficult terrain without a single delay to our installation timeline.",
+      "What stood out was the logistics coordination - heavy equipment moved through difficult terrain without a single delay to our installation timeline.",
     name: "Site Operations Director",
     role: "Industrial Catering Network",
   },

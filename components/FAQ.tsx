@@ -8,7 +8,7 @@ const faqs = [
   },
   {
     q: "Can you handle full procurement-to-installation projects?",
-    a: "Yes. Our scope covers sourcing, quality inspection, land and marine logistics, and on-site installation support — with full documentation handover at completion.",
+    a: "Yes. Our scope covers sourcing, quality inspection, land and marine logistics, and on-site installation support - with full documentation handover at completion.",
   },
   {
     q: "How do you manage offshore logistics and customs clearance?",

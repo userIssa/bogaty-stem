@@ -27,12 +27,12 @@ export async function POST(req: NextRequest) {
       to: process.env.CONTACT_TO_EMAIL,
       replyTo: email,
       subject: `New project enquiry from ${name}${company ? ` (${company})` : ""}`,
-      text: `Name: ${name}\nCompany: ${company || "—"}\nEmail: ${email}\n\nMessage:\n${message}`,
+      text: `Name: ${name}\nCompany: ${company || "-"}\nEmail: ${email}\n\nMessage:\n${message}`,
       html: `
         <div style="font-family: sans-serif; color: #15171C; line-height: 1.6;">
           <h2 style="margin-bottom: 16px;">New Project Enquiry</h2>
           <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Company:</strong> ${company || "—"}</p>
+          <p><strong>Company:</strong> ${company || "-"}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Message:</strong></p>
           <p style="white-space: pre-wrap; background: #F4F4F5; padding: 12px 16px; border-radius: 8px;">${message}</p>

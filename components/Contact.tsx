@@ -156,7 +156,7 @@ export default function Contact() {
           ))}
         </div>
         <div className="text-center mt-6 text-xs text-muted font-mono">
-          © {new Date().getFullYear()} Bogaty STEM — A subsidiary of Bogaty Centrum Limited
+          © {new Date().getFullYear()} Bogaty STEM - A subsidiary of Bogaty Centrum Limited
         </div>
       </div>
     </section>

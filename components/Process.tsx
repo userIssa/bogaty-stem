@@ -13,7 +13,7 @@ const steps = [
   {
     num: "02",
     title: "Solution Blueprint",
-    desc: "A detailed delivery architecture is designed — vendors identified, logistics mapped, safety compliance verified.",
+    desc: "A detailed delivery architecture is designed - vendors identified, logistics mapped, safety compliance verified.",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path d="M3 3h7v7H3V3zM14 3h7v7h-7V3zM14 14h7v7h-7v-7zM3 14h7v7H3v-7z" stroke="white" strokeWidth="2" strokeLinejoin="round" />
@@ -34,7 +34,7 @@ const steps = [
   {
     num: "04",
     title: "Logistics & Delivery",
-    desc: "Land and marine logistics coordinated end-to-end — including customs clearance, heavy haulage, and last-mile delivery to remote sites.",
+    desc: "Land and marine logistics coordinated end-to-end - including customs clearance, heavy haulage, and last-mile delivery to remote sites.",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path d="M1 12l5-7h7l5 7-5 7H6l-5-7z" stroke="white" strokeWidth="2" strokeLinejoin="round" />
@@ -45,7 +45,7 @@ const steps = [
   {
     num: "05",
     title: "Installation & Handover",
-    desc: "On-site commissioning support, safety sign-offs, and full documentation handover — no loose ends.",
+    desc: "On-site commissioning support, safety sign-offs, and full documentation handover - no loose ends.",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path d="M20 6L9 17l-5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -68,7 +68,7 @@ export default function Process() {
           </h2>
           <p className="text-muted text-base max-w-xl mx-auto leading-relaxed">
             A proven process designed to transform complex procurement
-            challenges into scalable, on-spec deliveries — efficiently and
+            challenges into scalable, on-spec deliveries - efficiently and
             safely.
           </p>
         </div>

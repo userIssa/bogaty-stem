@@ -29,7 +29,7 @@ function ChatIllustration() {
           </svg>
         </div>
         <div className="bg-white border border-line rounded-2xl rounded-bl-sm px-3 py-2 text-xs text-ink">
-          Good day — yes, dispatch is on schedule.
+          Good day - yes, dispatch is on schedule.
         </div>
       </div>
     </div>
@@ -126,7 +126,7 @@ export default function Services() {
               </h3>
               <p className="text-muted text-base leading-relaxed">
                 A wide array of critical components sourced and delivered to
-                specification — safety apparatus, valves, instrumentation
+                specification - safety apparatus, valves, instrumentation
                 control, gas process equipment, pumps, and electricals.
               </p>
             </div>
@@ -155,7 +155,7 @@ export default function Services() {
             </h3>
             <p className="text-muted text-base leading-relaxed mb-6">
               End-to-end logistics solutions ensuring seamless transportation
-              and supply chain operations — from heavy equipment delivery to
+              and supply chain operations - from heavy equipment delivery to
               remote locations through to marine freight coordination.
             </p>
             <div className="mt-auto">

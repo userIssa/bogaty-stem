@@ -25,7 +25,7 @@ export default function About() {
             </span>
             <p className="text-ink text-lg leading-relaxed">
               To provide cutting-edge STEM solutions that drive efficiency,
-              sustainability and innovation in the oil and gas sector —
+              sustainability and innovation in the oil and gas sector -
               prioritising precision, integrity and client satisfaction in
               every project we undertake.
             </p>

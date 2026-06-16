@@ -42,7 +42,7 @@ export default function Hero() {
 
         <p className="text-muted text-lg leading-relaxed max-w-xl mx-auto mb-10 fade-up-delay-3">
           We build bespoke engineering solutions that address the complex
-          challenges faced by our clients in the oil and gas industry —
+          challenges faced by our clients in the oil and gas industry -
           procurement, logistics, safety, and pipeline integrity.
         </p>
 

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -12,11 +12,20 @@ const OPPORTUNITY_TYPES = [
   "Other",
 ];
 
+interface Event {
+  id: number;
+  name: string;
+  is_active: number;
+}
+
 export default function ContactCapturePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [formState, setFormState] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [events, setEvents] = useState<Event[]>([]);
+  const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
   const [companyName, setCompanyName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
@@ -26,6 +35,23 @@ export default function ContactCapturePage() {
   const [notes, setNotes] = useState("");
   const [opportunityType, setOpportunityType] = useState("");
   const [opportunityOther, setOpportunityOther] = useState("");
+
+  // Fetch active events
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetch("/api/portal/events")
+        .then((r) => r.json())
+        .then((data) => {
+          const activeEvents = (data.events || []).filter((e: Event) => e.is_active);
+          setEvents(activeEvents);
+          // Auto-select if only one active event
+          if (activeEvents.length === 1) {
+            setSelectedEventId(activeEvents[0].id);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [status]);
 
   if (status === "loading") {
     return (
@@ -41,6 +67,7 @@ export default function ContactCapturePage() {
   }
 
   const isAdmin = (session.user as any)?.role === "admin";
+  const selectedEvent = events.find((e) => e.id === selectedEventId);
 
   const resetForm = () => {
     setCompanyName("");
@@ -73,6 +100,7 @@ export default function ContactCapturePage() {
           notes,
           opportunityType,
           opportunityOther,
+          eventId: selectedEventId,
         }),
       });
 
@@ -162,12 +190,45 @@ export default function ContactCapturePage() {
 
       {/* Form Container */}
       <div className="max-w-lg mx-auto px-4 pt-8">
+        {/* Event Selector */}
+        {events.length > 0 && (
+          <div className="mb-6">
+            {events.length === 1 ? (
+              <div className="section-badge mb-4">
+                <span className="dot" />
+                {events[0].name}
+              </div>
+            ) : (
+              <div className="mb-4">
+                <label className="block text-xs font-mono font-medium mb-2 uppercase tracking-wider text-muted">
+                  Select Event <span className="text-gold">*</span>
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {events.map((event) => (
+                    <button
+                      key={event.id}
+                      type="button"
+                      onClick={() => setSelectedEventId(event.id)}
+                      className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all border ${
+                        selectedEventId === event.id
+                          ? "bg-white border-gold text-ink shadow-sm"
+                          : "bg-mist border-line text-muted hover:border-gold/50"
+                      }`}
+                    >
+                      {selectedEventId === event.id && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-gold" />
+                      )}
+                      {event.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-6">
-          <div className="section-badge mb-4">
-            <span className="dot" />
-            Nigerian Oil &amp; Gas Conference
-          </div>
           <h1 className="font-display font-bold text-3xl text-ink tracking-tight">
             Conference Contacts
           </h1>
@@ -256,7 +317,7 @@ export default function ContactCapturePage() {
           <button
             id="btn-submit-contact"
             type="submit"
-            disabled={formState === "submitting" || !companyName || !contactPerson || !email || !opportunityType}
+            disabled={formState === "submitting" || !companyName || !contactPerson || !email || !opportunityType || !selectedEventId}
             className="w-full mt-5 py-4 rounded-full font-display font-semibold text-sm transition-all flex items-center justify-center gap-2 bg-charcoal hover:bg-ink text-white disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {formState === "submitting" ? (

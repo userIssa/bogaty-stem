@@ -14,8 +14,16 @@ interface Contact {
   notes: string;
   opportunity_type: string;
   opportunity_other: string;
+  event_id: number | null;
+  event_name: string | null;
   submitted_by: string;
   created_at: string;
+}
+
+interface Event {
+  id: number;
+  name: string;
+  is_active: number;
 }
 
 export default function AdminDashboard() {
@@ -23,9 +31,11 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  const [eventFilter, setEventFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -35,6 +45,7 @@ export default function AdminDashboard() {
     const params = new URLSearchParams();
     if (search) params.set("search", search);
     if (typeFilter) params.set("type", typeFilter);
+    if (eventFilter) params.set("event", eventFilter);
     if (dateFrom) params.set("from", dateFrom);
     if (dateTo) params.set("to", dateTo);
 
@@ -46,11 +57,20 @@ export default function AdminDashboard() {
       console.error("Failed to fetch contacts");
     }
     setLoading(false);
-  }, [search, typeFilter, dateFrom, dateTo]);
+  }, [search, typeFilter, eventFilter, dateFrom, dateTo]);
+
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch("/api/portal/events");
+      const data = await res.json();
+      setEvents(data.events || []);
+    } catch {}
+  };
 
   useEffect(() => {
     if (status === "authenticated" && (session?.user as any)?.role === "admin") {
       fetchContacts();
+      fetchEvents();
     }
   }, [status, session, fetchContacts]);
 
@@ -74,7 +94,9 @@ export default function AdminDashboard() {
   };
 
   const handleExport = () => {
-    window.open("/api/portal/contacts/export", "_blank");
+    const params = new URLSearchParams();
+    if (eventFilter) params.set("event", eventFilter);
+    window.open(`/api/portal/contacts/export?${params.toString()}`, "_blank");
   };
 
   // Stats
@@ -111,6 +133,12 @@ export default function AdminDashboard() {
                 <path d="M12 5v14M5 12h14" />
               </svg>
               New Contact
+            </button>
+            <button
+              onClick={() => router.push("/portal/admin/events")}
+              className="inline-flex items-center gap-2 bg-mist hover:bg-cloud border border-line transition-colors text-ink font-medium text-xs px-3 py-2 rounded-full"
+            >
+              Events
             </button>
             <button
               onClick={() => router.push("/portal/admin/users")}
@@ -170,6 +198,18 @@ export default function AdminDashboard() {
               <option value="Subcontracting">Subcontracting</option>
               <option value="Equipment Supply">Equipment Supply</option>
               <option value="Other">Other</option>
+            </select>
+            <select
+              value={eventFilter}
+              onChange={(e) => setEventFilter(e.target.value)}
+              className="px-4 py-3 rounded-xl text-sm outline-none bg-white border border-line text-ink"
+            >
+              <option value="">All Events</option>
+              {events.map((ev) => (
+                <option key={ev.id} value={ev.id}>
+                  {ev.name}{!ev.is_active ? " (inactive)" : ""}
+                </option>
+              ))}
             </select>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 items-end">
@@ -237,11 +277,16 @@ export default function AdminDashboard() {
                   onClick={() => setExpandedId(expandedId === contact.id ? null : contact.id)}
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <p className="text-ink text-sm font-display font-semibold truncate">{contact.company_name}</p>
                       <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium uppercase tracking-wider bg-mist border border-line text-muted">
                         {contact.opportunity_type}
                       </span>
+                      {contact.event_name && (
+                        <span className="shrink-0 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium uppercase tracking-wider bg-gold/5 border border-gold/20 text-gold">
+                          {contact.event_name}
+                        </span>
+                      )}
                     </div>
                     <p className="text-xs text-muted truncate">
                       {contact.contact_person} • {contact.email}
@@ -273,6 +318,7 @@ export default function AdminDashboard() {
                           ? `Other: ${contact.opportunity_other}`
                           : contact.opportunity_type
                       } />
+                      <DetailItem label="Event" value={contact.event_name || "—"} />
                       <DetailItem label="Captured By" value={contact.submitted_by} />
                     </div>
                     {contact.notes && (

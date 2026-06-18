@@ -157,6 +157,8 @@ export default function Contact() {
         </div>
         <div className="text-center mt-6 text-xs text-muted font-mono">
           © {new Date().getFullYear()} Bogaty STEM - A subsidiary of Bogaty Centrum Limited
+          <span className="mx-2">•</span>
+          <a href="/portal/login" className="hover:text-gold transition-colors">Staff Portal</a>
         </div>
       </div>
     </section>

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import db from "@/lib/db";
+import { getDb } from "@/lib/db";
+import { ObjectId } from "mongodb";
 import { sendThankYouEmail, sendAdminNotification } from "@/lib/emails";
 
 // GET  /api/portal/contacts?search=...&type=...&from=...&to=...&event=...
@@ -11,11 +12,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Only admins can view all contacts
   if ((session.user as any).role !== "admin") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const db = await getDb();
   const { searchParams } = new URL(req.url);
   const search = searchParams.get("search") || "";
   const type = searchParams.get("type") || "";
@@ -23,41 +24,63 @@ export async function GET(req: NextRequest) {
   const to = searchParams.get("to") || "";
   const eventId = searchParams.get("event") || "";
 
-  let query =
-    "SELECT c.*, e.name as event_name FROM contacts c LEFT JOIN events e ON c.event_id = e.id WHERE 1=1";
-  const params: any[] = [];
+  const filter: any = {};
 
   if (search) {
-    query +=
-      " AND (c.company_name LIKE ? OR c.contact_person LIKE ? OR c.email LIKE ?)";
-    const s = `%${search}%`;
-    params.push(s, s, s);
+    const regex = { $regex: search, $options: "i" };
+    filter.$or = [
+      { company_name: regex },
+      { contact_person: regex },
+      { email: regex },
+    ];
   }
 
   if (type) {
-    query += " AND c.opportunity_type = ?";
-    params.push(type);
+    filter.opportunity_type = type;
   }
 
   if (eventId) {
-    query += " AND c.event_id = ?";
-    params.push(eventId);
+    try {
+      filter.event_id = new ObjectId(eventId);
+    } catch {
+      filter.event_id = eventId;
+    }
   }
 
-  if (from) {
-    query += " AND c.created_at >= ?";
-    params.push(from);
+  if (from || to) {
+    filter.created_at = {};
+    if (from) filter.created_at.$gte = from;
+    if (to) filter.created_at.$lte = to + " 23:59:59";
   }
 
-  if (to) {
-    query += " AND c.created_at <= ?";
-    params.push(to + " 23:59:59");
-  }
+  const contacts = await db
+    .collection("contacts")
+    .find(filter)
+    .sort({ created_at: -1 })
+    .toArray();
 
-  query += " ORDER BY c.created_at DESC";
+  // Resolve event names
+  const eventIds = Array.from(
+    new Set(contacts.map((c) => c.event_id?.toString()).filter(Boolean))
+  );
+  const events =
+    eventIds.length > 0
+      ? await db
+          .collection("events")
+          .find({ _id: { $in: eventIds.map((id) => new ObjectId(id)) } })
+          .toArray()
+      : [];
+  const eventMap = Object.fromEntries(events.map((e) => [e._id.toString(), e.name]));
 
-  const contacts = db.prepare(query).all(...params);
-  return NextResponse.json({ contacts });
+  const result = contacts.map((c) => ({
+    ...c,
+    id: c._id.toString(),
+    _id: undefined,
+    event_id: c.event_id?.toString() || null,
+    event_name: c.event_id ? eventMap[c.event_id.toString()] || null : null,
+  }));
+
+  return NextResponse.json({ contacts: result });
 }
 
 // POST  /api/portal/contacts
@@ -68,6 +91,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const db = await getDb();
     const body = await req.json();
     const {
       companyName,
@@ -92,32 +116,36 @@ export async function POST(req: NextRequest) {
 
     // Get event name for the email
     let eventName = "";
+    let eventOid = null;
     if (eventId) {
-      const event = db.prepare("SELECT name FROM events WHERE id = ?").get(eventId) as any;
-      eventName = event?.name || "";
+      try {
+        eventOid = new ObjectId(eventId);
+      } catch {
+        eventOid = null;
+      }
+      if (eventOid) {
+        const event = await db.collection("events").findOne({ _id: eventOid });
+        eventName = event?.name || "";
+      }
     }
 
-    const result = db
-      .prepare(
-        `INSERT INTO contacts (company_name, contact_person, position, email, phone, notes, opportunity_type, opportunity_other, event_id, submitted_by)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-      )
-      .run(
-        companyName,
-        contactPerson,
-        position || "",
-        email,
-        phone || "",
-        notes || "",
-        opportunityType,
-        opportunityOther || "",
-        eventId || null,
-        submittedBy
-      );
+    const result = await db.collection("contacts").insertOne({
+      company_name: companyName,
+      contact_person: contactPerson,
+      position: position || "",
+      email,
+      phone: phone || "",
+      notes: notes || "",
+      opportunity_type: opportunityType,
+      opportunity_other: opportunityOther || "",
+      event_id: eventOid,
+      submitted_by: submittedBy,
+      created_at: new Date().toISOString(),
+    });
 
-    // Send thank-you email to the contact (fire & forget, don't block response)
-    sendThankYouEmail({ contactPerson, companyName, email, eventName }).catch(
-      (err) => console.error("Failed to send thank-you email:", err)
+    // Send thank-you email (fire & forget)
+    sendThankYouEmail({ contactPerson, companyName, email, eventName }).catch((err) =>
+      console.error("Failed to send thank-you email:", err)
     );
 
     // Send admin notification (fire & forget)
@@ -139,7 +167,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      id: result.lastInsertRowid,
+      id: result.insertedId.toString(),
     });
   } catch (err) {
     console.error("Contact submission error:", err);
@@ -157,12 +185,18 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const db = await getDb();
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) {
     return NextResponse.json({ error: "ID required" }, { status: 400 });
   }
 
-  db.prepare("DELETE FROM contacts WHERE id = ?").run(id);
+  try {
+    await db.collection("contacts").deleteOne({ _id: new ObjectId(id) });
+  } catch {
+    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+  }
+
   return NextResponse.json({ success: true });
 }

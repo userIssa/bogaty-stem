@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import db from "@/lib/db";
+import { getDb } from "@/lib/db";
+import { ObjectId } from "mongodb";
 
 // GET /api/portal/contacts/export?event=... — returns CSV
 export async function GET(req: NextRequest) {
@@ -10,21 +11,34 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  const db = await getDb();
   const { searchParams } = new URL(req.url);
   const eventId = searchParams.get("event") || "";
 
-  let query =
-    "SELECT c.*, e.name as event_name FROM contacts c LEFT JOIN events e ON c.event_id = e.id";
-  const params: any[] = [];
-
+  const filter: any = {};
   if (eventId) {
-    query += " WHERE c.event_id = ?";
-    params.push(eventId);
+    try {
+      filter.event_id = new ObjectId(eventId);
+    } catch {
+      filter.event_id = eventId;
+    }
   }
 
-  query += " ORDER BY c.created_at DESC";
+  const contacts = await db
+    .collection("contacts")
+    .find(filter)
+    .sort({ created_at: -1 })
+    .toArray();
 
-  const contacts = db.prepare(query).all(...params) as any[];
+  // Resolve event names
+  const eventIds = Array.from(
+    new Set(contacts.map((c) => c.event_id?.toString()).filter(Boolean))
+  );
+  const events =
+    eventIds.length > 0
+      ? await db.collection("events").find({ _id: { $in: eventIds.map((id) => new ObjectId(id)) } }).toArray()
+      : [];
+  const eventMap = Object.fromEntries(events.map((e) => [e._id.toString(), e.name]));
 
   // Build CSV
   const headers = [
@@ -52,8 +66,8 @@ export async function GET(req: NextRequest) {
 
   const rows = contacts.map((c) =>
     [
-      c.id,
-      escapeCSV(c.event_name || ""),
+      c._id.toString(),
+      escapeCSV(c.event_id ? eventMap[c.event_id.toString()] || "" : ""),
       escapeCSV(c.company_name),
       escapeCSV(c.contact_person),
       escapeCSV(c.position),

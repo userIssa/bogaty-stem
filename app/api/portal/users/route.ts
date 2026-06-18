@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import db from "@/lib/db";
+import { getDb } from "@/lib/db";
+import { ObjectId } from "mongodb";
 import bcrypt from "bcryptjs";
 
 // GET /api/portal/users — list all users
@@ -11,10 +12,21 @@ export async function GET() {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const users = db
-    .prepare("SELECT id, username, role, created_at FROM users ORDER BY created_at DESC")
-    .all();
-  return NextResponse.json({ users });
+  const db = await getDb();
+  const users = await db
+    .collection("users")
+    .find({}, { projection: { password: 0 } })
+    .sort({ created_at: -1 })
+    .toArray();
+
+  const result = users.map((u) => ({
+    id: u._id.toString(),
+    username: u.username,
+    role: u.role,
+    created_at: u.created_at,
+  }));
+
+  return NextResponse.json({ users: result });
 }
 
 // POST /api/portal/users — create user
@@ -34,9 +46,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const existing = db
-      .prepare("SELECT id FROM users WHERE username = ?")
-      .get(username);
+    const db = await getDb();
+    const existing = await db.collection("users").findOne({ username });
     if (existing) {
       return NextResponse.json(
         { error: "Username already exists." },
@@ -45,11 +56,12 @@ export async function POST(req: NextRequest) {
     }
 
     const hash = bcrypt.hashSync(password, 12);
-    db.prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)").run(
+    await db.collection("users").insertOne({
       username,
-      hash,
-      role || "staff"
-    );
+      password: hash,
+      role: role || "staff",
+      created_at: new Date().toISOString(),
+    });
 
     return NextResponse.json({ success: true });
   } catch (err) {
@@ -75,13 +87,19 @@ export async function DELETE(req: NextRequest) {
   }
 
   // Prevent deleting yourself
-  if (String(id) === (session.user as any).userId) {
+  if (id === (session.user as any).userId) {
     return NextResponse.json(
       { error: "Cannot delete your own account." },
       { status: 400 }
     );
   }
 
-  db.prepare("DELETE FROM users WHERE id = ?").run(id);
+  const db = await getDb();
+  try {
+    await db.collection("users").deleteOne({ _id: new ObjectId(id) });
+  } catch {
+    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+  }
+
   return NextResponse.json({ success: true });
 }

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface User {
-  id: number;
+  id: string;
   username: string;
   role: string;
   created_at: string;
@@ -27,7 +27,7 @@ export default function UserManagementPage() {
   const [addLoading, setAddLoading] = useState(false);
 
   // Reset password
-  const [resetUserId, setResetUserId] = useState<number | null>(null);
+  const [resetUserId, setResetUserId] = useState<string | null>(null);
   const [resetPassword, setResetPassword] = useState("");
   const [resetError, setResetError] = useState("");
   const [resetSuccess, setResetSuccess] = useState(false);
@@ -92,7 +92,7 @@ export default function UserManagementPage() {
     setAddLoading(false);
   };
 
-  const handleDeleteUser = async (id: number) => {
+  const handleDeleteUser = async (id: string) => {
     if (!confirm("Delete this user?")) return;
     await fetch(`/api/portal/users?id=${id}`, { method: "DELETE" });
     fetchUsers();

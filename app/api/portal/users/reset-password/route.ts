@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import db from "@/lib/db";
+import { getDb } from "@/lib/db";
+import { ObjectId } from "mongodb";
 import bcrypt from "bcryptjs";
 
 // POST /api/portal/users/reset-password
@@ -28,8 +29,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const db = await getDb();
     const hash = bcrypt.hashSync(newPassword, 12);
-    db.prepare("UPDATE users SET password = ? WHERE id = ?").run(hash, userId);
+    await db
+      .collection("users")
+      .updateOne({ _id: new ObjectId(userId) }, { $set: { password: hash } });
 
     return NextResponse.json({ success: true });
   } catch (err) {

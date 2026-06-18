@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface Contact {
-  id: number;
+  id: string;
   company_name: string;
   contact_person: string;
   position: string;
@@ -14,14 +14,14 @@ interface Contact {
   notes: string;
   opportunity_type: string;
   opportunity_other: string;
-  event_id: number | null;
+  event_id: string | null;
   event_name: string | null;
   submitted_by: string;
   created_at: string;
 }
 
 interface Event {
-  id: number;
+  id: string;
   name: string;
   is_active: number;
 }
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
   const [eventFilter, setEventFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const fetchContacts = useCallback(async () => {
     setLoading(true);
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
     return null;
   }
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Delete this contact?")) return;
     await fetch(`/api/portal/contacts?id=${id}`, { method: "DELETE" });
     fetchContacts();

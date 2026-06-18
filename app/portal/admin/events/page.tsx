@@ -4,7 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 interface Event {
-  id: number;
+  id: string;
   name: string;
   is_active: number;
   created_at: string;
@@ -77,7 +77,7 @@ export default function EventManagementPage() {
     setAddLoading(false);
   };
 
-  const handleToggleActive = async (id: number, currentlyActive: number) => {
+  const handleToggleActive = async (id: string, currentlyActive: number) => {
     try {
       await fetch("/api/portal/events", {
         method: "PATCH",
@@ -88,7 +88,7 @@ export default function EventManagementPage() {
     } catch {}
   };
 
-  const handleDeleteEvent = async (id: number) => {
+  const handleDeleteEvent = async (id: string) => {
     if (!confirm("Delete this event? This only works if no contacts are linked to it.")) return;
     try {
       const res = await fetch(`/api/portal/events?id=${id}`, { method: "DELETE" });

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import db from "@/lib/db";
+import { getDb } from "@/lib/db";
+import { ObjectId } from "mongodb";
 
 // GET /api/portal/events — list all events (any authenticated user)
 export async function GET() {
@@ -10,10 +11,21 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const events = db
-    .prepare("SELECT * FROM events ORDER BY is_active DESC, created_at DESC")
-    .all();
-  return NextResponse.json({ events });
+  const db = await getDb();
+  const events = await db
+    .collection("events")
+    .find()
+    .sort({ is_active: -1, created_at: -1 })
+    .toArray();
+
+  const result = events.map((e) => ({
+    id: e._id.toString(),
+    name: e.name,
+    is_active: e.is_active ? 1 : 0,
+    created_at: e.created_at,
+  }));
+
+  return NextResponse.json({ events: result });
 }
 
 // POST /api/portal/events — create event (admin only)
@@ -33,11 +45,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = db
-      .prepare("INSERT INTO events (name, is_active) VALUES (?, ?)")
-      .run(name.trim(), 1);
+    const db = await getDb();
+    const result = await db.collection("events").insertOne({
+      name: name.trim(),
+      is_active: true,
+      created_at: new Date().toISOString(),
+    });
 
-    return NextResponse.json({ success: true, id: result.lastInsertRowid });
+    return NextResponse.json({ success: true, id: result.insertedId.toString() });
   } catch (err) {
     console.error("Event creation error:", err);
     return NextResponse.json(
@@ -56,14 +71,16 @@ export async function PATCH(req: NextRequest) {
 
   try {
     const { id, is_active } = await req.json();
-    if (id == null) {
+    if (!id) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
 
-    db.prepare("UPDATE events SET is_active = ? WHERE id = ?").run(
-      is_active ? 1 : 0,
-      id
+    const db = await getDb();
+    await db.collection("events").updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { is_active: !!is_active } }
     );
+
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Event update error:", err);
@@ -87,18 +104,29 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "ID required" }, { status: 400 });
   }
 
+  const db = await getDb();
+
   // Check if any contacts reference this event
-  const contactCount = (
-    db.prepare("SELECT COUNT(*) as cnt FROM contacts WHERE event_id = ?").get(id) as any
-  ).cnt;
+  let oid: ObjectId;
+  try {
+    oid = new ObjectId(id);
+  } catch {
+    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+  }
+
+  const contactCount = await db
+    .collection("contacts")
+    .countDocuments({ event_id: oid });
 
   if (contactCount > 0) {
     return NextResponse.json(
-      { error: `Cannot delete — ${contactCount} contact(s) are linked to this event. Deactivate it instead.` },
+      {
+        error: `Cannot delete — ${contactCount} contact(s) are linked to this event. Deactivate it instead.`,
+      },
       { status: 400 }
     );
   }
 
-  db.prepare("DELETE FROM events WHERE id = ?").run(id);
+  await db.collection("events").deleteOne({ _id: oid });
   return NextResponse.json({ success: true });
 }

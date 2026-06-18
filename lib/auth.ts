@@ -1,7 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import db from "./db";
+import { getDb } from "./db";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,11 +14,10 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null;
 
-        const user = db
-          .prepare("SELECT * FROM users WHERE username = ?")
-          .get(credentials.username) as
-          | { id: number; username: string; password: string; role: string }
-          | undefined;
+        const db = await getDb();
+        const user = await db
+          .collection("users")
+          .findOne({ username: credentials.username });
 
         if (!user) return null;
 
@@ -26,7 +25,7 @@ export const authOptions: NextAuthOptions = {
         if (!valid) return null;
 
         return {
-          id: String(user.id),
+          id: user._id.toString(),
           name: user.username,
           role: user.role,
         };

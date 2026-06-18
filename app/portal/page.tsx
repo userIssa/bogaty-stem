@@ -13,7 +13,7 @@ const OPPORTUNITY_TYPES = [
 ];
 
 interface Event {
-  id: number;
+  id: string;
   name: string;
   is_active: number;
 }
@@ -25,7 +25,7 @@ export default function ContactCapturePage() {
   const [errorMsg, setErrorMsg] = useState("");
 
   const [events, setEvents] = useState<Event[]>([]);
-  const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
   const [companyName, setCompanyName] = useState("");
   const [contactPerson, setContactPerson] = useState("");

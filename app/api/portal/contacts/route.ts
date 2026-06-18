@@ -143,27 +143,27 @@ export async function POST(req: NextRequest) {
       created_at: new Date().toISOString(),
     });
 
-    // Send thank-you email (fire & forget)
-    sendThankYouEmail({ contactPerson, companyName, email, eventName }).catch((err) =>
-      console.error("Failed to send thank-you email:", err)
-    );
-
-    // Send admin notification (fire & forget)
-    sendAdminNotification({
-      companyName,
-      contactPerson,
-      position: position || "",
-      email,
-      phone: phone || "",
-      opportunityType:
-        opportunityType === "Other" && opportunityOther
-          ? `Other: ${opportunityOther}`
-          : opportunityType,
-      submittedBy,
-      eventName,
-    }).catch((err) =>
-      console.error("Failed to send admin notification:", err)
-    );
+    // Send emails (await to ensure delivery in serverless environments)
+    await Promise.all([
+      sendThankYouEmail({ contactPerson, companyName, email, eventName }).catch((err) =>
+        console.error("Failed to send thank-you email:", err)
+      ),
+      sendAdminNotification({
+        companyName,
+        contactPerson,
+        position: position || "",
+        email,
+        phone: phone || "",
+        opportunityType:
+          opportunityType === "Other" && opportunityOther
+            ? `Other: ${opportunityOther}`
+            : opportunityType,
+        submittedBy,
+        eventName,
+      }).catch((err) =>
+        console.error("Failed to send admin notification:", err)
+      )
+    ]);
 
     return NextResponse.json({
       success: true,

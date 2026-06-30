@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 const OPPORTUNITY_TYPES = [
   "Vendor Registration",
@@ -159,15 +160,21 @@ export default function ContactCapturePage() {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-line">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-mist border border-line flex items-center justify-center p-1">
-              <Image src="/logos/icon-gold.png" alt="Bogaty STEM" width={24} height={24} className="object-contain w-full h-full" />
-            </div>
-            <div>
-              <p className="text-ink text-sm font-display font-semibold leading-tight">Bogaty STEM</p>
-              <p className="text-[10px] text-muted font-mono leading-tight uppercase tracking-wider">
-                {session.user?.name} • {isAdmin ? "Admin" : "Staff"}
-              </p>
-            </div>
+            <Link 
+              href="/"
+              title="Back to site"
+              className="flex items-center gap-3 group"
+            >
+              <div className="w-8 h-8 rounded-full bg-mist border border-line flex items-center justify-center p-1 group-hover:border-gold group-hover:scale-105 transition-all">
+                <Image src="/logos/icon-gold.png" alt="Bogaty STEM" width={24} height={24} className="object-contain w-full h-full" />
+              </div>
+              <div>
+                <p className="text-ink text-sm font-display font-semibold leading-tight group-hover:text-gold transition-colors">Bogaty STEM</p>
+                <p className="text-[10px] text-muted font-mono leading-tight uppercase tracking-wider">
+                  {session.user?.name} • {isAdmin ? "Admin" : "Staff"}
+                </p>
+              </div>
+            </Link>
           </div>
           <div className="flex items-center gap-2">
             {isAdmin && (

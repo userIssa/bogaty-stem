@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 function ChatIllustration() {
   return (
     <div className="bento-card p-6 flex flex-col gap-3 justify-center min-h-[180px]">
@@ -54,16 +58,34 @@ function ChartIllustration() {
 
 function OrgDiagram() {
   const icons = [
-    <path key="a" d="M4 6h16M4 12h16M4 18h10" stroke="white" strokeWidth="2" strokeLinecap="round" />,
-    <circle key="b" cx="12" cy="12" r="9" stroke="white" strokeWidth="2" />,
-    <path key="c" d="M3 12h18M12 3v18" stroke="white" strokeWidth="2" strokeLinecap="round" />,
+    // Land Logistics (Truck)
+    <g key="truck" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1" y="3" width="15" height="13" rx="2" ry="2" />
+      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+      <circle cx="5.5" cy="18.5" r="2.5" />
+      <circle cx="18.5" cy="18.5" r="2.5" />
+    </g>,
+    // Marine Logistics (Cargo Ship)
+    <g key="ship" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 17h20L19 7H5L2 17z" />
+      <path d="M5 7V3h3v4" />
+      <path d="M9 7V3h3v4" />
+      <path d="M13 7V3h3v4" />
+    </g>,
+    // Package/Logistics (Box)
+    <g key="package" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+      <path d="M2 17l10 5 10-5M2 7v10M22 7v10M12 12v10" />
+    </g>
   ];
   return (
     <div className="bento-card p-6 flex flex-col items-center justify-center gap-4 min-h-[180px]">
       <div className="icon-tile w-11 h-11 shrink-0">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2L2 8l10 6 10-6-10-6z" fill="white" />
-          <path d="M2 16l10 6 10-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <g stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+          </g>
         </svg>
       </div>
       <div className="w-px h-5 bg-line shrink-0" />
@@ -78,29 +100,48 @@ function OrgDiagram() {
   );
 }
 
-function IconRow() {
-  const icons = [
-    <path key="a" d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z" />,
-    <circle key="b" cx="12" cy="12" r="9" />,
-    <path key="c" d="M12 4a8 8 0 110 16 8 8 0 010-16zm0 4v4l3 2" />,
-    <path key="d" d="M4 19h16M6 19V9l6-4 6 4v10" />,
-  ];
-  return (
-    <div className="grid grid-cols-4 gap-3">
-      {icons.map((p, i) => (
-        <div key={i} className="bento-card aspect-square flex items-center justify-center">
-          <div className="icon-tile-light w-12 h-12">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6E76" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-              {p}
-            </svg>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+const CATEGORIES = [
+  {
+    id: "safety",
+    label: "Safety Apparatus",
+    title: "Safety Apparatus",
+    body: "PPE, Firefighting Equipment, Emergency Response Kits, Gas Detection & Monitoring Systems",
+  },
+  {
+    id: "valves",
+    label: "Valves",
+    title: "Valves",
+    body: "Ball, Gate & Globe Valves, Pressure Relief Valves, Check and Butterfly Valves, Actuated Control Valves",
+  },
+  {
+    id: "instrumentation",
+    label: "Instrumentation Control",
+    title: "Instrumentation Control",
+    body: "Flow, Pressure & Temperature Sensors, Control Panels and Automation Systems, Process Monitoring Instruments, Industrial Calibration Equipment",
+  },
+  {
+    id: "gas-process",
+    label: "Gas Process Equipment",
+    title: "Gas Process Equipment",
+    body: "Gas Compressors & Separators, Filtration & Treatment Systems, Gas Dehydration Units, Measurement & Flow Control Devices",
+  },
+  {
+    id: "pumps",
+    label: "Pumps",
+    title: "Pumps",
+    body: "Centrifugal & Reciprocating Pumps, Submersible & Multistage Pumps, Chemical Injection Pumps, High-Pressure Pumping Systems",
+  },
+  {
+    id: "electrical",
+    label: "Electrical Solutions",
+    title: "Electrical Solutions",
+    body: "Industrial Power Generators, Electrical Panels & Switchgear, Cables, Transformers & Circuit Breakers, Lighting & Explosion-Proof Fixtures",
+  },
+];
 
 export default function Services() {
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
   return (
     <section id="services" className="py-20 lg:py-28">
       <div className="max-w-6xl mx-auto px-6 lg:px-8">
@@ -167,11 +208,15 @@ export default function Services() {
         <div className="grid lg:grid-cols-[1fr_1.4fr] gap-6 items-stretch">
           <div className="glow-card p-8 flex flex-col justify-between min-h-[280px] relative">
             <div className="relative z-10">
-              <div className="icon-tile w-12 h-12 mb-6">
+              <a 
+                href="#contact" 
+                className="icon-tile w-12 h-12 mb-6 transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+                title="Contact our team"
+              >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" fill="white" />
                 </svg>
-              </div>
+              </a>
               <h3 className="font-display font-semibold text-2xl text-ink mb-3">
                 Not sure what you need?
               </h3>
@@ -192,17 +237,61 @@ export default function Services() {
             </a>
           </div>
 
-          <div className="bento-card p-6 lg:p-8 flex flex-col">
-            <h3 className="font-display font-semibold text-2xl text-ink mb-3">
-              Electricals &amp; Safety Apparatus
-            </h3>
-            <p className="text-muted text-base leading-relaxed mb-6">
-              Access to high-quality electrical equipment and reliable safety
-              gear tailored to meet regulatory standards across offshore and
-              onshore operations.
-            </p>
-            <div className="mt-auto">
-              <IconRow />
+          <div 
+            className="bento-card p-6 lg:p-8 flex flex-col justify-between"
+            onMouseLeave={() => setActiveCategory(null)}
+          >
+            <div className="grid grid-cols-1 grid-rows-1 mb-8">
+              {/* Default State */}
+              <div 
+                className={`col-start-1 row-start-1 transition-all duration-300 ease-out ${
+                  activeCategory === null 
+                    ? "opacity-100 translate-y-0 pointer-events-auto" 
+                    : "opacity-0 -translate-y-2 pointer-events-none"
+                }`}
+              >
+                <h3 className="font-display font-semibold text-2xl text-ink mb-3">
+                  Procurement &amp; Supply Chain Solutions
+                </h3>
+                <p className="text-muted text-base leading-relaxed">
+                  We source and supply high-quality equipment to support oil and gas operations, ensuring efficiency and compliance.
+                </p>
+              </div>
+
+              {/* Category States */}
+              {CATEGORIES.map((cat) => (
+                <div 
+                  key={cat.id}
+                  className={`col-start-1 row-start-1 transition-all duration-300 ease-out ${
+                    activeCategory === cat.id 
+                      ? "opacity-100 translate-y-0 pointer-events-auto" 
+                      : "opacity-0 translate-y-2 pointer-events-none"
+                  }`}
+                >
+                  <h3 className="font-display font-semibold text-2xl text-ink mb-3">
+                    {cat.title}
+                  </h3>
+                  <p className="text-muted text-base leading-relaxed">
+                    {cat.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-auto grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  onMouseEnter={() => setActiveCategory(cat.id)}
+                  className={`rounded-full py-2.5 px-3 text-center text-xs sm:text-sm font-medium border transition-colors duration-200 ${
+                    activeCategory === cat.id
+                      ? "bg-ink border-ink text-white"
+                      : "bg-white border-line text-ink hover:bg-ink hover:text-white hover:border-ink"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>

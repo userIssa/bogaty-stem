@@ -12,7 +12,7 @@ function ChatIllustration() {
             <circle cx="12" cy="12" r="4" fill="white" />
           </svg>
         </div>
-        <div className="bg-white border border-line rounded-2xl rounded-bl-sm px-3 py-2">
+        <div className="bg-card-inner border border-line rounded-2xl rounded-bl-sm px-3 py-2">
           <div className="flex gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-line" />
             <span className="w-1.5 h-1.5 rounded-full bg-line" />
@@ -32,7 +32,7 @@ function ChatIllustration() {
             <circle cx="12" cy="12" r="4" fill="white" />
           </svg>
         </div>
-        <div className="bg-white border border-line rounded-2xl rounded-bl-sm px-3 py-2 text-xs text-ink">
+        <div className="bg-card-inner border border-line rounded-2xl rounded-bl-sm px-3 py-2 text-xs text-ink">
           Good day - yes, dispatch is on schedule.
         </div>
       </div>
@@ -46,7 +46,7 @@ function ChartIllustration() {
     <div className="bento-card p-6 flex flex-col justify-between min-h-[180px]">
       <div className="flex items-center justify-between">
         <span className="text-xs font-mono text-muted uppercase tracking-wider">Deliveries Tracked</span>
-        <span className="text-xs font-mono text-ink bg-white border border-line rounded-full px-2 py-1">200+</span>
+        <span className="text-xs font-mono text-ink bg-card-inner border border-line rounded-full px-2 py-1">200+</span>
       </div>
       <svg viewBox="0 0 120 44" className="w-full h-16 mt-4" preserveAspectRatio="none">
         <polyline points={points} fill="none" stroke="#C8962A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -228,7 +228,7 @@ export default function Services() {
             </div>
             <a
               href="#contact"
-              className="relative z-10 inline-flex items-center gap-2 bg-ink text-white text-sm font-medium px-5 py-3 rounded-full w-fit"
+              className="relative z-10 inline-flex items-center gap-2 bg-ink text-white dark:text-[#15171C] text-sm font-medium px-5 py-3 rounded-full w-fit"
             >
               Schedule a Call
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -286,7 +286,7 @@ export default function Services() {
                   className={`rounded-full py-2.5 px-3 text-center text-xs sm:text-sm font-medium border transition-colors duration-200 ${
                     activeCategory === cat.id
                       ? "bg-ink border-ink text-white"
-                      : "bg-white border-line text-ink hover:bg-ink hover:text-white hover:border-ink"
+                      : "bg-card-inner border-line text-ink hover:bg-ink hover:text-white hover:border-ink"
                   }`}
                 >
                   {cat.label}

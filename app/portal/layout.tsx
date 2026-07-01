@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react";
 export default function PortalLayout({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #FAFAFB 0%, #F1F1F3 45%, #E9E9EC 100%)" }}>
+      <div className="min-h-screen bg-gradient-to-b from-paper via-mist to-cloud text-ink transition-colors duration-300">
         {children}
       </div>
     </SessionProvider>

@@ -1,9 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    const initialTheme = (savedTheme as "light" | "dark") || systemTheme;
+    setTheme(initialTheme);
+    if (initialTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    if (newTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   const links = [
     { label: "About", href: "#about" },
@@ -41,24 +65,44 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* CTA */}
-        <a
-          href="#contact"
-          className="hidden sm:inline-flex items-center gap-2 bg-white hover:bg-mist transition-colors text-ink font-medium text-sm px-4 py-2 rounded-full whitespace-nowrap"
-        >
-          Work with Us
-        </a>
+        <div className="flex items-center gap-2">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center text-white shrink-0"
+            title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+          >
+            {theme === "light" ? (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+              </svg>
+            )}
+          </button>
 
-        {/* Mobile hamburger */}
-        <button
-          className="lg:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors text-white text-sm px-4 py-2 rounded-full"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M1 3.5h12M1 7h12M1 10.5h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          Menu
-        </button>
+          {/* CTA */}
+          <a
+            href="#contact"
+            className="hidden sm:inline-flex items-center gap-2 bg-white hover:bg-mist transition-colors text-ink dark:text-[#15171C] font-medium text-sm px-4 py-2 rounded-full whitespace-nowrap"
+          >
+            Work with Us
+          </a>
+
+          {/* Mobile hamburger */}
+          <button
+            className="lg:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors text-white text-sm px-4 py-2 rounded-full"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 3.5h12M1 7h12M1 10.5h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            Menu
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -77,7 +121,7 @@ export default function Navbar() {
           <a
             href="#contact"
             onClick={() => setMenuOpen(false)}
-            className="bg-white text-ink font-medium text-sm px-4 py-2.5 rounded-full text-center mt-1"
+            className="bg-white text-ink dark:text-[#15171C] font-medium text-sm px-4 py-2.5 rounded-full text-center mt-1"
           >
             Work with Us
           </a>

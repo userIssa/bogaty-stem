@@ -44,7 +44,7 @@ export default function FAQ() {
                 onClick={() => setOpen(open === i ? null : i)}
               >
                 <div className="flex items-center gap-4">
-                  <span className="font-mono text-xs text-muted bg-white border border-line rounded-full w-7 h-7 flex items-center justify-center shrink-0">
+                  <span className="font-mono text-xs text-muted bg-card-inner border border-line rounded-full w-7 h-7 flex items-center justify-center shrink-0">
                     {i + 1}
                   </span>
                   <span className="font-display font-medium text-ink text-base lg:text-lg">

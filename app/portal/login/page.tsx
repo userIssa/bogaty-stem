@@ -36,7 +36,7 @@ export default function LoginPage() {
         {/* Logo & Title */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-14 h-14 rounded-full bg-white border border-line flex items-center justify-center shadow-sm p-2">
+            <div className="w-14 h-14 rounded-full bg-card-inner border border-line flex items-center justify-center shadow-sm p-2">
               <Image src="/logos/icon-gold.png" alt="Bogaty STEM" width={40} height={40} className="object-contain w-full h-full" />
             </div>
           </div>
@@ -63,7 +63,7 @@ export default function LoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 autoComplete="username"
-                className="w-full px-4 py-3.5 rounded-xl text-ink text-sm transition-all outline-none bg-white border border-line focus:border-gold"
+                className="w-full px-4 py-3.5 rounded-xl text-ink text-sm transition-all outline-none bg-card-inner border border-line focus:border-gold"
                 placeholder="Enter your username"
               />
             </div>
@@ -80,7 +80,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
-                className="w-full px-4 py-3.5 rounded-xl text-ink text-sm transition-all outline-none bg-white border border-line focus:border-gold"
+                className="w-full px-4 py-3.5 rounded-xl text-ink text-sm transition-all outline-none bg-card-inner border border-line focus:border-gold"
                 placeholder="Enter your password"
               />
             </div>
@@ -100,7 +100,7 @@ export default function LoginPage() {
               id="login-submit"
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-full font-display font-semibold text-sm transition-all flex items-center justify-center gap-2 bg-charcoal hover:bg-ink text-white disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3.5 rounded-full font-display font-semibold text-sm transition-all flex items-center justify-center gap-2 bg-charcoal hover:bg-ink dark:hover:text-[#15171C] text-white disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

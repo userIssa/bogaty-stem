@@ -112,7 +112,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen pb-8">
       {/* Top Bar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-line">
+      <nav className="sticky top-0 z-50 bg-paper/80 backdrop-blur-md border-b border-line">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link 
@@ -134,7 +134,7 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => router.push("/portal")}
-              className="inline-flex items-center gap-1.5 bg-charcoal hover:bg-ink text-white font-medium text-xs px-3 py-2 rounded-full transition-colors"
+              className="inline-flex items-center gap-1.5 bg-charcoal hover:bg-ink dark:hover:text-[#15171C] text-white font-medium text-xs px-3 py-2 rounded-full transition-colors"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M12 5v14M5 12h14" />
@@ -192,12 +192,12 @@ export default function AdminDashboard() {
               placeholder="Search company, name, email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 px-4 py-3 rounded-xl text-ink text-sm outline-none bg-white border border-line focus:border-gold"
+              className="flex-1 px-4 py-3 rounded-xl text-ink text-sm outline-none bg-card-inner border border-line focus:border-gold"
             />
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-3 rounded-xl text-sm outline-none bg-white border border-line text-ink"
+              className="px-4 py-3 rounded-xl text-sm outline-none bg-card-inner border border-line text-ink"
             >
               <option value="">All Types</option>
               <option value="Vendor Registration">Vendor Registration</option>
@@ -209,7 +209,7 @@ export default function AdminDashboard() {
             <select
               value={eventFilter}
               onChange={(e) => setEventFilter(e.target.value)}
-              className="px-4 py-3 rounded-xl text-sm outline-none bg-white border border-line text-ink"
+              className="px-4 py-3 rounded-xl text-sm outline-none bg-card-inner border border-line text-ink"
             >
               <option value="">All Events</option>
               {events.map((ev) => (
@@ -227,7 +227,7 @@ export default function AdminDashboard() {
                   type="date"
                   value={dateFrom}
                   onChange={(e) => setDateFrom(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl text-ink text-sm outline-none bg-white border border-line focus:border-gold"
+                  className="w-full px-3 py-2.5 rounded-xl text-ink text-sm outline-none bg-card-inner border border-line focus:border-gold"
                 />
               </div>
               <div className="flex-1">
@@ -236,20 +236,20 @@ export default function AdminDashboard() {
                   type="date"
                   value={dateTo}
                   onChange={(e) => setDateTo(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl text-ink text-sm outline-none bg-white border border-line focus:border-gold"
+                  className="w-full px-3 py-2.5 rounded-xl text-ink text-sm outline-none bg-card-inner border border-line focus:border-gold"
                 />
               </div>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={fetchContacts}
-                className="px-4 py-2.5 rounded-full text-sm font-medium bg-charcoal hover:bg-ink text-white transition-colors"
+                className="px-4 py-2.5 rounded-full text-sm font-medium bg-charcoal hover:bg-ink dark:hover:text-[#15171C] text-white transition-colors"
               >
                 Search
               </button>
               <button
                 onClick={handleExport}
-                className="px-4 py-2.5 rounded-full text-sm font-medium flex items-center gap-2 bg-white border border-line hover:border-gold text-ink transition-colors"
+                className="px-4 py-2.5 rounded-full text-sm font-medium flex items-center gap-2 bg-card-inner border border-line hover:border-gold text-ink transition-colors"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
@@ -331,7 +331,7 @@ export default function AdminDashboard() {
                     {contact.notes && (
                       <div>
                         <p className="text-[10px] font-mono uppercase tracking-wider text-muted mb-1">Notes</p>
-                        <p className="text-sm text-ink/80 whitespace-pre-wrap px-3 py-2.5 rounded-xl bg-white border border-line">
+                        <p className="text-sm text-ink/80 whitespace-pre-wrap px-3 py-2.5 rounded-xl bg-card-inner border border-line">
                           {contact.notes}
                         </p>
                       </div>

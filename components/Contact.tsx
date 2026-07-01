@@ -115,7 +115,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-white hover:bg-mist transition-colors text-ink font-display font-semibold text-sm px-8 py-3.5 rounded-full mx-auto mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="bg-white hover:bg-mist transition-colors text-ink dark:text-[#15171C] font-display font-semibold text-sm px-8 py-3.5 rounded-full mx-auto mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {loading ? "Sending..." : "Send Your Request!"}
                 </button>

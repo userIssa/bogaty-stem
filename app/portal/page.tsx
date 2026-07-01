@@ -134,14 +134,14 @@ export default function ContactCapturePage() {
             <div className="flex flex-col gap-3">
               <button
                 onClick={resetForm}
-                className="w-full py-3.5 rounded-full font-display font-semibold text-sm bg-charcoal hover:bg-ink text-white transition-colors"
+                className="w-full py-3.5 rounded-full font-display font-semibold text-sm bg-charcoal hover:bg-ink dark:hover:text-[#15171C] text-white transition-colors"
               >
                 + Add Another Contact
               </button>
               {isAdmin && (
                 <button
                   onClick={() => router.push("/portal/admin")}
-                  className="w-full py-3.5 rounded-full font-display font-medium text-sm bg-white border border-line hover:border-gold text-ink transition-colors"
+                  className="w-full py-3.5 rounded-full font-display font-medium text-sm bg-card-inner border border-line hover:border-gold text-ink transition-colors"
                 >
                   View Dashboard
                 </button>
@@ -157,7 +157,7 @@ export default function ContactCapturePage() {
   return (
     <div className="min-h-screen pb-8">
       {/* Top Bar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-line">
+      <nav className="sticky top-0 z-50 bg-paper/80 backdrop-blur-md border-b border-line">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link 
@@ -218,7 +218,7 @@ export default function ContactCapturePage() {
                       onClick={() => setSelectedEventId(event.id)}
                       className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all border ${
                         selectedEventId === event.id
-                          ? "bg-white border-gold text-ink shadow-sm"
+                          ? "bg-card-inner border-gold text-ink shadow-sm"
                           : "bg-mist border-line text-muted hover:border-gold/50"
                       }`}
                     >
@@ -275,7 +275,7 @@ export default function ContactCapturePage() {
                     onClick={() => setOpportunityType(type)}
                     className={`px-3 py-3 rounded-xl text-sm font-medium transition-all text-left border ${
                       opportunityType === type
-                        ? "bg-white border-gold text-ink shadow-sm"
+                        ? "bg-card-inner border-gold text-ink shadow-sm"
                         : "bg-mist border-line text-muted hover:border-gold/50"
                     }`}
                   >
@@ -289,7 +289,7 @@ export default function ContactCapturePage() {
                   value={opportunityOther}
                   onChange={(e) => setOpportunityOther(e.target.value)}
                   placeholder="Please specify..."
-                  className="w-full mt-2 px-4 py-3 rounded-xl text-ink text-sm outline-none bg-white border border-line focus:border-gold"
+                  className="w-full mt-2 px-4 py-3 rounded-xl text-ink text-sm outline-none bg-card-inner border border-line focus:border-gold"
                 />
               )}
             </div>
@@ -305,7 +305,7 @@ export default function ContactCapturePage() {
                 onChange={(e) => setNotes(e.target.value)}
                 rows={3}
                 placeholder="Key discussion points, interests, follow-up items..."
-                className="w-full px-4 py-3 rounded-xl text-ink text-sm outline-none resize-none bg-white border border-line focus:border-gold"
+                className="w-full px-4 py-3 rounded-xl text-ink text-sm outline-none resize-none bg-card-inner border border-line focus:border-gold"
               />
             </div>
           </div>
@@ -325,7 +325,7 @@ export default function ContactCapturePage() {
             id="btn-submit-contact"
             type="submit"
             disabled={formState === "submitting" || !companyName || !contactPerson || !email || !opportunityType || !selectedEventId}
-            className="w-full mt-5 py-4 rounded-full font-display font-semibold text-sm transition-all flex items-center justify-center gap-2 bg-charcoal hover:bg-ink text-white disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full mt-5 py-4 rounded-full font-display font-semibold text-sm transition-all flex items-center justify-center gap-2 bg-charcoal hover:bg-ink dark:hover:text-[#15171C] text-white disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {formState === "submitting" ? (
               <>
@@ -379,7 +379,7 @@ function InputField({
         onChange={(e) => onChange(e.target.value)}
         required={required}
         placeholder={placeholder}
-        className="w-full px-4 py-3.5 rounded-xl text-ink text-sm transition-all outline-none bg-white border border-line focus:border-gold"
+        className="w-full px-4 py-3.5 rounded-xl text-ink text-sm transition-all outline-none bg-card-inner border border-line focus:border-gold"
       />
     </div>
   );

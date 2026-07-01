@@ -12,6 +12,18 @@
   --gold: #C8962A;
   --gold-light: #E8B84B;
   --muted: #6B6E76;
+  --card-inner: #FFFFFF;
+}
+
+.dark {
+  --ink: #F3F4F6;
+  --charcoal: #1E2026;
+  --paper: #0F1014;
+  --mist: #1E2026;
+  --cloud: #252831;
+  --line: #2D313E;
+  --muted: #9AA0A6;
+  --card-inner: #292C37;
 }
 
 * {
@@ -25,6 +37,7 @@ html {
 body {
   background-color: var(--paper);
   color: var(--ink);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Floating pill nav */
@@ -83,7 +96,7 @@ body {
   background: var(--mist);
   border: 1px solid var(--line);
   border-radius: 1.75rem;
-  transition: border-color 0.25s ease, transform 0.25s ease;
+  transition: border-color 0.25s ease, transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
 }
 .bento-card:hover {
   border-color: var(--gold);
@@ -94,6 +107,7 @@ body {
   background: linear-gradient(135deg, #ffe9d6 0%, #ffd6e8 25%, #d6e4ff 55%, #d6fff0 100%);
   border-radius: 2rem;
   position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 .glow-card::before {
   content: '';
@@ -102,6 +116,14 @@ body {
   border-radius: 2rem;
   background-image: radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px);
   background-size: 16px 16px;
+}
+
+.dark .glow-card {
+  background: linear-gradient(135deg, #2A1D15 0%, #2A1722 25%, #182035 55%, #152A20 100%);
+  border: 1px solid var(--line);
+}
+.dark .glow-card::before {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
 }
 
 /* Icon tile */
@@ -121,6 +143,11 @@ body {
   justify-content: center;
   box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 4px 14px rgba(0,0,0,0.06);
   border: 1px solid var(--line);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+.dark .icon-tile-light {
+  background: linear-gradient(160deg, #252831 0%, #1A1C23 100%);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.05), 0 4px 14px rgba(0,0,0,0.2);
 }
 
 /* Marquee */
@@ -142,7 +169,7 @@ body {
   background: var(--mist);
   border: 1px solid var(--line);
   border-radius: 1.5rem;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 .faq-row:hover {
   border-color: var(--gold);

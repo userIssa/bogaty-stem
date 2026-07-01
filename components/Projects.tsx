@@ -44,7 +44,7 @@ export default function Projects() {
               </div>
               <div className="grid grid-cols-3 gap-3">
                 {p.metrics.map((m) => (
-                  <div key={m.label} className="bg-white border border-line rounded-2xl p-4 text-center">
+                  <div key={m.label} className="bg-card-inner border border-line rounded-2xl p-4 text-center">
                     <div className="font-display font-bold text-xl lg:text-2xl text-ink mb-1">
                       {m.value}
                     </div>

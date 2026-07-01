@@ -104,7 +104,7 @@ export default function EventManagementPage() {
   return (
     <div className="min-h-screen pb-8">
       {/* Top Bar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-line">
+      <nav className="sticky top-0 z-50 bg-paper/80 backdrop-blur-md border-b border-line">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button onClick={() => router.push("/portal/admin")} className="flex items-center justify-center w-8 h-8 rounded-full bg-mist border border-line hover:border-gold text-muted hover:text-ink transition-colors">
@@ -149,7 +149,7 @@ export default function EventManagementPage() {
           </div>
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="inline-flex items-center gap-1.5 bg-charcoal hover:bg-ink text-white font-medium text-sm px-4 py-2.5 rounded-full transition-colors"
+            className="inline-flex items-center gap-1.5 bg-charcoal hover:bg-ink dark:hover:text-[#15171C] text-white font-medium text-sm px-4 py-2.5 rounded-full transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
@@ -180,7 +180,7 @@ export default function EventManagementPage() {
                 onChange={(e) => setNewName(e.target.value)}
                 required
                 placeholder="e.g. Nigerian Oil & Gas Conference 2026"
-                className="w-full px-4 py-3 rounded-xl text-ink text-sm outline-none bg-white border border-line focus:border-gold"
+                className="w-full px-4 py-3 rounded-xl text-ink text-sm outline-none bg-card-inner border border-line focus:border-gold"
               />
 
               {addError && (
@@ -193,14 +193,14 @@ export default function EventManagementPage() {
                 <button
                   type="submit"
                   disabled={addLoading}
-                  className="px-5 py-2.5 rounded-full text-sm font-semibold bg-charcoal hover:bg-ink text-white transition-colors"
+                  className="px-5 py-2.5 rounded-full text-sm font-semibold bg-charcoal hover:bg-ink dark:hover:text-[#15171C] text-white transition-colors"
                 >
                   {addLoading ? "Creating..." : "Create Event"}
                 </button>
                 <button
                   type="button"
                   onClick={() => { setShowAddForm(false); setAddError(""); }}
-                  className="px-5 py-2.5 rounded-full text-sm font-medium bg-white border border-line hover:border-gold text-muted transition-colors"
+                  className="px-5 py-2.5 rounded-full text-sm font-medium bg-card-inner border border-line hover:border-gold text-muted transition-colors"
                 >
                   Cancel
                 </button>

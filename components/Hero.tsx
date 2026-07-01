@@ -103,10 +103,10 @@ export default function Hero() {
           { value: "28", label: "Offshore Sites Serviced" },
         ].map((s) => (
           <div key={s.label}>
-            <div className="font-display font-bold text-3xl text-gold-light mb-1">
+            <div className="font-display font-bold text-3xl text-ink dark:text-gold-light mb-1">
               {s.value}
             </div>
-            <div className="text-white/60 text-xs uppercase tracking-wider font-mono">
+            <div className="text-ink/60 dark:text-white/60 text-xs uppercase tracking-wider font-mono">
               {s.label}
             </div>
           </div>

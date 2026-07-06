@@ -266,7 +266,7 @@ export default function UserManagementPage() {
                           {user.role}
                         </span>
                         <span className="text-[10px] font-mono text-muted">
-                          Created {new Date(user.created_at + "Z").toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                          Created {user.created_at ? new Date(user.created_at.endsWith("Z") ? user.created_at : user.created_at + "Z").toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "—"}
                         </span>
                       </div>
                     </div>

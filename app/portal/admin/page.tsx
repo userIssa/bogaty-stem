@@ -377,6 +377,6 @@ function DetailItem({ label, value }: { label: string; value: string }) {
 
 function formatDate(dateStr: string) {
   if (!dateStr) return "";
-  const d = new Date(dateStr + "Z");
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  const d = new Date(dateStr.endsWith("Z") ? dateStr : dateStr + "Z");
+  return isNaN(d.getTime()) ? "—" : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }

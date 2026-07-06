@@ -244,7 +244,7 @@ export default function EventManagementPage() {
                           {event.is_active ? "Active" : "Inactive"}
                         </span>
                         <span className="text-[10px] font-mono text-muted">
-                          Created {new Date(event.created_at + "Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                          Created {event.created_at ? new Date(event.created_at.endsWith("Z") ? event.created_at : event.created_at + "Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "—"}
                         </span>
                       </div>
                     </div>

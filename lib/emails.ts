@@ -63,10 +63,19 @@ export async function sendThankYouEmail(contact: {
         <p style="font-size: 16px; line-height: 1.7;">
           Thank you.
         </p>
-        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #E2E2E5;">
-          <p style="margin: 0; font-size: 15px; font-weight: 600; color: #15171C;">Warm regards,</p>
-          <p style="margin: 4px 0 0; font-size: 15px; color: #C8962A; font-weight: 600;">Bogaty STEM</p>
-          <p style="margin: 2px 0 0; font-size: 12px; color: #6B6E76;">A subsidiary of Bogaty Centrum limited.</p>
+        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #E2E2E5; font-size: 14px; line-height: 1.6; color: #6B6E76;">
+          <p style="margin: 0; font-weight: 600; color: #15171C;">Warm regards,</p>
+          <p style="margin: 12px 0 0; font-size: 15px; color: #C8962A; font-weight: 600;">Bogaty STEM</p>
+          <p style="margin: 2px 0 0; font-size: 12px; font-weight: 500; color: #15171C;">A subsidiary of Bogaty Centrum limited.</p>
+          <p style="margin: 6px 0 0; font-size: 12px; color: #6B6E76;">
+            No. 5 National Supply Road, Trans Amadi Industrial Layout, Port Harcourt, Rivers State.
+          </p>
+          <p style="margin: 4px 0 0; font-size: 12px; color: #6B6E76;">
+            + 234 806 6079 075
+          </p>
+          <p style="margin: 4px 0 0; font-size: 12px; color: #6B6E76;">
+            <a href="mailto:info@bogatystem.com" style="color: #C8962A; text-decoration: none;">info@bogatystem.com</a> | <a href="https://www.bogatystem.com" target="_blank" style="color: #C8962A; text-decoration: none;">www.bogatystem.com</a>
+          </p>
         </div>
       </div>
     </div>
@@ -76,7 +85,7 @@ export async function sendThankYouEmail(contact: {
     from: `"Bogaty STEM" <${process.env.SMTP_USER}>`,
     to: contact.email,
     subject: "Thank You for Connecting with Bogaty STEM",
-    text: `Dear ${contact.contactPerson},\n\nThank you for connecting and engaging with Bogaty STEM at the ${event}.\n\n${bodyText}\n\nThank you.\n\nWarm regards,\nBogaty STEM`,
+    text: `Dear ${contact.contactPerson},\n\nThank you for connecting and engaging with Bogaty STEM at the ${event}.\n\n${bodyText}\n\nThank you.\n\nWarm regards,\n\nBogaty STEM\nA subsidiary of Bogaty Centrum limited.\nNo. 5 National Supply Road, Trans Amadi Industrial Layout, Port Harcourt, Rivers State.\n+ 234 806 6079 075\ninfo@bogatystem.com | www.bogatystem.com`,
     html: htmlBody,
   });
 }

@@ -145,7 +145,16 @@ export async function POST(req: NextRequest) {
 
     // Send emails (await to ensure delivery in serverless environments)
     await Promise.all([
-      sendThankYouEmail({ contactPerson, companyName, email, eventName }).catch((err) =>
+      sendThankYouEmail({
+        contactPerson,
+        companyName,
+        email,
+        eventName,
+        opportunityType:
+          opportunityType === "Other" && opportunityOther
+            ? opportunityOther
+            : opportunityType,
+      }).catch((err) =>
         console.error("Failed to send thank-you email:", err)
       ),
       sendAdminNotification({

@@ -20,15 +20,37 @@ export async function sendThankYouEmail(contact: {
   companyName: string;
   email: string;
   eventName?: string;
+  opportunityType?: string;
 }) {
   const transporter = createTransporter();
   const event = contact.eventName || "the conference";
+  const type = contact.opportunityType;
+
+  let bodyText = `We appreciate the opportunity to learn more about ${contact.companyName}, and we look forward to exploring potential collaboration opportunities with your organization.`;
+  let bodyHtml = `We appreciate the opportunity to learn more about <strong>${contact.companyName}</strong>, and we look forward to exploring potential collaboration opportunities with your organization.`;
+
+  if (type === "Partnership") {
+    bodyText = `We appreciate the opportunity to learn more about ${contact.companyName}, and we are looking forward to a potential partnership and collaborating with your organization.`;
+    bodyHtml = `We appreciate the opportunity to learn more about <strong>${contact.companyName}</strong>, and we are looking forward to a potential partnership and collaborating with your organization.`;
+  } else if (type === "Vendor Registration") {
+    bodyText = `We appreciate your interest in registering ${contact.companyName} as a vendor, and we look forward to reviewing your registration details for potential onboarding.`;
+    bodyHtml = `We appreciate your interest in registering <strong>${contact.companyName}</strong> as a vendor, and we look forward to reviewing your registration details for potential onboarding.`;
+  } else if (type === "Subcontracting") {
+    bodyText = `We appreciate the opportunity to learn more about ${contact.companyName}'s capabilities, and we look forward to exploring potential subcontracting opportunities on upcoming projects.`;
+    bodyHtml = `We appreciate the opportunity to learn more about <strong>${contact.companyName}</strong>'s capabilities, and we look forward to exploring potential subcontracting opportunities on upcoming projects.`;
+  } else if (type === "Equipment Supply") {
+    bodyText = `We appreciate the opportunity to learn more about ${contact.companyName}'s equipment supply offerings, and we look forward to exploring how we can collaborate on our equipment requirements.`;
+    bodyHtml = `We appreciate the opportunity to learn more about <strong>${contact.companyName}</strong>'s equipment supply offerings, and we look forward to exploring how we can collaborate on our equipment requirements.`;
+  } else if (type && type !== "Other") {
+    bodyText = `We appreciate your inquiry regarding "${type}" opportunities. We look forward to exploring how we can work together.`;
+    bodyHtml = `We appreciate your inquiry regarding "<strong>${type}</strong>" opportunities. We look forward to exploring how we can work together.`;
+  }
 
   const htmlBody = `
     <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #15171C;">
       <div style="background: linear-gradient(160deg, #2A2C32 0%, #15171C 100%); padding: 32px 28px; border-radius: 16px 16px 0 0;">
         <h1 style="color: #C8962A; margin: 0; font-size: 22px; font-weight: 600;">Bogaty STEM</h1>
-        <p style="color: rgba(255,255,255,0.6); margin: 4px 0 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;">Engineering for a Sustainable Future</p>
+        <p style="color: rgba(255,255,255,0.6); margin: 4px 0 0; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;">A subsidiary of Bogaty Centrum limited.</p>
       </div>
       <div style="background: #ffffff; padding: 32px 28px; border: 1px solid #E2E2E5; border-top: none; border-radius: 0 0 16px 16px;">
         <p style="font-size: 16px; line-height: 1.7; margin-top: 0;">Dear <strong>${contact.contactPerson}</strong>,</p>
@@ -36,15 +58,15 @@ export async function sendThankYouEmail(contact: {
           Thank you for connecting and engaging with <strong>Bogaty STEM</strong> at the ${event}.
         </p>
         <p style="font-size: 16px; line-height: 1.7;">
-          We appreciate the opportunity to learn more about <strong>${contact.companyName}</strong>, and we look forward to exploring potential collaboration opportunities with your organization.
+          ${bodyHtml}
         </p>
         <p style="font-size: 16px; line-height: 1.7;">
-          Our team will follow up with you shortly.
+          Thank you.
         </p>
         <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid #E2E2E5;">
           <p style="margin: 0; font-size: 15px; font-weight: 600; color: #15171C;">Warm regards,</p>
           <p style="margin: 4px 0 0; font-size: 15px; color: #C8962A; font-weight: 600;">Bogaty STEM</p>
-          <p style="margin: 2px 0 0; font-size: 12px; color: #6B6E76;">Engineering for a Sustainable Future</p>
+          <p style="margin: 2px 0 0; font-size: 12px; color: #6B6E76;">A subsidiary of Bogaty Centrum limited.</p>
         </div>
       </div>
     </div>
@@ -54,7 +76,7 @@ export async function sendThankYouEmail(contact: {
     from: `"Bogaty STEM" <${process.env.SMTP_USER}>`,
     to: contact.email,
     subject: "Thank You for Connecting with Bogaty STEM",
-    text: `Dear ${contact.contactPerson},\n\nThank you for connecting and engaging with Bogaty STEM at the ${event}.\n\nWe appreciate the opportunity to learn more about ${contact.companyName}, and we look forward to exploring potential collaboration opportunities with your organization.\n\nOur team will follow up with you shortly.\n\nWarm regards,\nBogaty STEM`,
+    text: `Dear ${contact.contactPerson},\n\nThank you for connecting and engaging with Bogaty STEM at the ${event}.\n\n${bodyText}\n\nThank you.\n\nWarm regards,\nBogaty STEM`,
     html: htmlBody,
   });
 }

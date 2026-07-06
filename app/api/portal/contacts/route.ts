@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { ObjectId } from "mongodb";
-import { sendThankYouEmail, sendAdminNotification } from "@/lib/emails";
+import { sendAdminNotification } from "@/lib/emails";
 
 // GET  /api/portal/contacts?search=...&type=...&from=...&to=...&event=...
 export async function GET(req: NextRequest) {
@@ -141,38 +141,26 @@ export async function POST(req: NextRequest) {
       event_id: eventOid,
       submitted_by: submittedBy,
       created_at: new Date().toISOString(),
+      thank_you_sent: false,
+      send_thank_you_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
     });
 
-    // Send emails (await to ensure delivery in serverless environments)
-    await Promise.all([
-      sendThankYouEmail({
-        contactPerson,
-        companyName,
-        email,
-        eventName,
-        opportunityType:
-          opportunityType === "Other" && opportunityOther
-            ? opportunityOther
-            : opportunityType,
-      }).catch((err) =>
-        console.error("Failed to send thank-you email:", err)
-      ),
-      sendAdminNotification({
-        companyName,
-        contactPerson,
-        position: position || "",
-        email,
-        phone: phone || "",
-        opportunityType:
-          opportunityType === "Other" && opportunityOther
-            ? `Other: ${opportunityOther}`
-            : opportunityType,
-        submittedBy,
-        eventName,
-      }).catch((err) =>
-        console.error("Failed to send admin notification:", err)
-      )
-    ]);
+    // Send admin notification instantly (await to ensure delivery in serverless environments)
+    await sendAdminNotification({
+      companyName,
+      contactPerson,
+      position: position || "",
+      email,
+      phone: phone || "",
+      opportunityType:
+        opportunityType === "Other" && opportunityOther
+          ? `Other: ${opportunityOther}`
+          : opportunityType,
+      submittedBy,
+      eventName,
+    }).catch((err) =>
+      console.error("Failed to send admin notification:", err)
+    );
 
     return NextResponse.json({
       success: true,

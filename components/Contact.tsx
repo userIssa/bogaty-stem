@@ -9,6 +9,7 @@ export default function Contact() {
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", company: "", email: "", message: "" });
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [showCaptcha, setShowCaptcha] = useState(false);
   const recaptchaRef = useRef<ReCAPTCHA | null>(null);
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
@@ -16,22 +17,15 @@ export default function Contact() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (siteKey && !recaptchaToken) {
-      setError("Please complete the reCAPTCHA verification to proceed.");
-      return;
-    }
-
+  const sendEnquiry = async (token: string) => {
     setLoading(true);
+    setError(null);
 
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, recaptchaToken }),
+        body: JSON.stringify({ ...form, recaptchaToken: token }),
       });
 
       if (!res.ok) {
@@ -42,12 +36,34 @@ export default function Contact() {
       setSubmitted(true);
       recaptchaRef.current?.reset();
       setRecaptchaToken(null);
+      setShowCaptcha(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       recaptchaRef.current?.reset();
       setRecaptchaToken(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    if (siteKey && !recaptchaToken) {
+      setShowCaptcha(true);
+      setError("Please check the 'I\'m not a robot' box below to send your request.");
+      return;
+    }
+
+    await sendEnquiry(recaptchaToken || "");
+  };
+
+  const handleCaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+    if (token) {
+      setError(null);
+      sendEnquiry(token);
     }
   };
 
@@ -124,16 +140,13 @@ export default function Contact() {
                   className="w-full bg-white/10 border border-white/10 rounded-3xl px-5 py-3.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-gold transition-colors resize-none"
                 />
 
-                {siteKey && (
-                  <div className="flex justify-center my-1 overflow-hidden">
+                {siteKey && showCaptcha && (
+                  <div className="flex flex-col items-center justify-center my-2 captcha-reveal">
                     <ReCAPTCHA
                       ref={recaptchaRef}
                       sitekey={siteKey}
                       theme="dark"
-                      onChange={(token) => {
-                        setRecaptchaToken(token);
-                        setError(null);
-                      }}
+                      onChange={handleCaptchaChange}
                       onExpired={() => setRecaptchaToken(null)}
                     />
                   </div>

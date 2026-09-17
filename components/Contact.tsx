@@ -1,12 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", company: "", email: "", message: "" });
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null);
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -14,14 +18,20 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+
+    if (siteKey && !recaptchaToken) {
+      setError("Please complete the reCAPTCHA verification to proceed.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, recaptchaToken }),
       });
 
       if (!res.ok) {
@@ -30,8 +40,12 @@ export default function Contact() {
       }
 
       setSubmitted(true);
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      recaptchaRef.current?.reset();
+      setRecaptchaToken(null);
     } finally {
       setLoading(false);
     }
@@ -109,6 +123,22 @@ export default function Contact() {
                   placeholder="Message"
                   className="w-full bg-white/10 border border-white/10 rounded-3xl px-5 py-3.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-gold transition-colors resize-none"
                 />
+
+                {siteKey && (
+                  <div className="flex justify-center my-1 overflow-hidden">
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={siteKey}
+                      theme="dark"
+                      onChange={(token) => {
+                        setRecaptchaToken(token);
+                        setError(null);
+                      }}
+                      onExpired={() => setRecaptchaToken(null)}
+                    />
+                  </div>
+                )}
+
                 {error && (
                   <p className="text-sm text-red-300 -mt-1">{error}</p>
                 )}

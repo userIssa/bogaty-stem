@@ -131,3 +131,22 @@ To trigger the queue automatically:
 
 ## 📅 Date Display Formatting
 Dates in the database are stored as full UTC ISO strings (e.g. `2026-07-06T20:51:33.456Z`). The helper utility in `formatDate` automatically checks if the date ends in `"Z"` before attempting to append a timezone tag, preventing `Invalid Date` crashes across all admin views.
+
+---
+
+## 🛡️ Google reCAPTCHA v2 Setup
+
+The public inquiry form on the landing page is protected by Google reCAPTCHA v2 ("I'm not a robot" Checkbox).
+
+### 1. Generating Keys
+1. Visit the [Google reCAPTCHA Admin Console](https://www.google.com/recaptcha/admin).
+2. Register a new site:
+   * **reCAPTCHA type**: Select **reCAPTCHA v2** -> **"I'm not a robot" Checkbox**.
+   * **Domains**: Add `localhost` (for testing) and your production domains (e.g. `bogatystem.com`, `bogatystem.netlify.app`).
+3. Copy the generated **Site Key** and **Secret Key**.
+
+### 2. Environment Variables
+Add the keys to `.env.local` (for local development) and to Netlify Site Settings -> Environment Variables (for production):
+* `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`: Your reCAPTCHA Site Key (client-facing).
+* `RECAPTCHA_SECRET_KEY`: Your reCAPTCHA Secret Key (server-side verification).
+

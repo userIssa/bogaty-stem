@@ -3,10 +3,6 @@ import { MongoClient, Db } from "mongodb";
 const MONGODB_URI = process.env.MONGODB_URI || "";
 const MONGODB_DB = process.env.MONGODB_DB || "bogaty_portal";
 
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable in .env.local");
-}
-
 let cachedClient: MongoClient | null = null;
 let cachedDb: Db | null = null;
 
@@ -17,6 +13,10 @@ let cachedDb: Db | null = null;
  */
 export async function getDb(): Promise<Db> {
   if (cachedDb) return cachedDb;
+
+  if (!MONGODB_URI) {
+    throw new Error("Please define the MONGODB_URI environment variable in .env.local");
+  }
 
   const client = new MongoClient(MONGODB_URI);
   await client.connect();

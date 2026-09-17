@@ -3,13 +3,46 @@ import nodemailer from "nodemailer";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, company, email, message } = await req.json();
+    const { name, company, email, message, recaptchaToken } = await req.json();
 
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "Name, email, and message are required." },
         { status: 400 }
       );
+    }
+
+    // Verify Google reCAPTCHA
+    const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
+    if (recaptchaSecret) {
+      if (!recaptchaToken) {
+        return NextResponse.json(
+          { error: "Please complete the reCAPTCHA verification." },
+          { status: 400 }
+        );
+      }
+
+      const verifyRes = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          secret: recaptchaSecret,
+          response: recaptchaToken,
+        }).toString(),
+      });
+
+      const verifyData = await verifyRes.json();
+      if (!verifyData.success) {
+        console.warn("reCAPTCHA verification failed:", verifyData["error-codes"]);
+        return NextResponse.json(
+          { error: "reCAPTCHA verification failed. Please try again." },
+          { status: 400 }
+        );
+      }
+    } else {
+      console.warn("RECAPTCHA_SECRET_KEY is not configured. Skipping reCAPTCHA check in this environment.");
     }
 
     const transporter = nodemailer.createTransport({
